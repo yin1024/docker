@@ -1,0 +1,40 @@
+version: "3.12"
+
+services:
+  python:
+    container_name: hwe-docker
+    build: ./server/.
+    image: "hwe-docker:1.0"
+    command: python3 server/app.py
+    ports:
+      - "5001:5000" 
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+    networks:
+      - local-net
+
+
+  db:
+    image: postgres:alpine
+    container_name: postgres
+    hostname: db
+    restart: always
+    tty: true
+    environment:
+      POSTGRES_DB: ntue
+      POSTGRES_USER: ntue
+      POSTGRES_PASSWORD: ntuedtd
+    ports:
+      - "5432:5432" 
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - local-net
+
+volumes:
+  postgres_data:
+
+networks:
+  local-net:
